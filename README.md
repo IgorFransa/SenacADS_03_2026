@@ -36,17 +36,15 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 
 ### 1.1. Revisitar jornada (evolução da PoC)
 
-Como evolução da PoC, pode ser acrescentado o cancelamento de reservas. O usuário deverá poder cancelar uma reserva que não será mais necessária. Após o cancelamento, a data deverá voltar a aparecer como disponível na agenda da ferramenta:
+**Evolução planejada (ainda não implementada por completo):** o administrador também poderá cancelar reservas com justificativas pré-definidas (ferramenta perdida, danificada, em manutenção), bloquear o item e notificar moradores e síndico:
 
-1. Usuário acessa o sistema
+1. Administrador acessa o sistema
 2. Realiza o login
-3. Visualiza **Minhas Reservas**
+3. Visualiza **Solicitações de retirada**
 4. Seleciona a reserva que deseja cancelar
-5. Confirma o cancelamento da reserva
-6. A reserva permanece visível no histórico com status cancelada (conforme regras implementadas)
-7. A data volta a estar disponível para reserva
-
-**Evolução planejada (ainda não implementada por completo):** o administrador também poderá cancelar reservas com justificativas pré-definidas (ferramenta perdida, danificada, em manutenção), bloquear o item e notificar moradores e síndico.
+5. Insere a justificativa apropriada
+6. Confirma o cancelamento da reserva
+7. A reserva permanece visível no histórico com status cancelada (conforme regras implementadas)
 
 ## Capturas de tela
 
