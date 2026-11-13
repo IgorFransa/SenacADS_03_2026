@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['solicitar'])) {
                     $dataFim . ' 20:00:00'
                 ]);
 
-                $mensagem = 'Solicitação enviada! Aguarde a aprovação do responsável.';
+                $mensagem = 'Solicitação enviada!Aguarde a aprovação do responsável.';
                 $dataInicio = '';
                 $dataFim = '';
             }
