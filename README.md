@@ -48,6 +48,22 @@ Como evolução da PoC, pode ser acrescentado o cancelamento de reservas. O usu�
 
 **Evolução planejada (ainda não implementada por completo):** o administrador também poderá cancelar reservas com justificativas pré-definidas (ferramenta perdida, danificada, em manutenção), bloquear o item e notificar moradores e síndico.
 
+## Capturas de tela
+
+As telas principais da aplicação podem ser visualizadas abaixo:
+
+### Login
+
+![Tela de login](assets/screenshots/login.png)
+
+### Área do morador
+
+![Catálogo e calendário de reservas](assets/screenshots/morador.png)
+
+### Área da administração
+
+![Painel de solicitações de retirada](assets/screenshots/administracao.png)
+
 ## 2. Preparação do ambiente
 
 ### 2.1. Stack
@@ -161,7 +177,11 @@ SenacADS_03_2026/
 ├── includes/
 └── assets/
     ├── css/
-    └── js/
+    ├── js/
+    └── screenshots/
+        ├── login.png
+        ├── morador.png
+        └── administracao.png
 ```
 
 ### 2.4. Execução manual (XAMPP / PHP local)
