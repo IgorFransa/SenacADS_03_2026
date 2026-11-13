@@ -68,62 +68,99 @@ $emprestimosPendentes = $stmtListar->fetchAll(PDO::FETCH_ASSOC);
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Confirmar Retirada de Itens</title>
-    <style>
-        body { font-family: sans-serif; margin: 15px; color: #000; background: #fff; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-        th { background: #eee; }
-        .alert { background: #eee; padding: 8px; margin-bottom: 15px; border: 1px solid #000; }
-        .error { background: #f8d7da; color: #721c24; padding: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitações de retirada | Condomínio Compartilha</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-    <p>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome'], ENT_QUOTES, 'UTF-8'); ?> | <a href="../auth/logout.php">Sair</a></p>
-    
-    <h2>Painel do Administrador - Confirmar Retirada</h2>
+    <div class="app-shell">
+        <header class="app-header">
+            <a class="app-brand" href="retira.php" aria-label="Condomínio Compartilha">
+                <span class="brand-mark" aria-hidden="true">C+</span>
+                <span class="brand-copy">
+                    <span class="brand-name">Condomínio Compartilha</span>
+                    <span class="brand-tagline">Uso inteligente dos espaços e itens</span>
+                </span>
+            </a>
 
-    <?php if (!empty($mensagem)): ?>
-        <div class="alert"><?php echo htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8'); ?></div>
-    <?php endif; ?>
+            <div class="user-menu">
+                <span class="user-welcome">
+                    <small>Área da administração</small>
+                    <strong><?php echo htmlspecialchars($_SESSION['nome'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                </span>
+                <a class="logout-link" href="../auth/logout.php">Sair</a>
+            </div>
+        </header>
 
-    <?php if (!empty($erro)): ?>
-        <div class="error"><?php echo htmlspecialchars($erro, ENT_QUOTES, 'UTF-8'); ?></div>
-    <?php endif; ?>
+        <main class="page-main">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">Central de atendimento</p>
+                    <h1>Solicitações de retirada</h1>
+                    <p>Revise os pedidos pendentes e confirme a entrega dos itens aos moradores.</p>
+                </div>
+                <span class="auto-refresh">Atualização automática a cada 30s</span>
+            </div>
 
-    <?php if (empty($emprestimosPendentes)): ?>
-        <p>Nenhuma solicitação de empréstimo pendente para retirada no momento.</p>
-    <?php else: ?>
-        <table>
-            <thead>
-                <tr>
-                    <th># ID</th>
-                    <th>Morador</th>
-                    <th>Item Solicitado</th>
-                    <th>Data/Hora Solicitação</th>
-                    <th>Observações</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($emprestimosPendentes as $emp): ?>
-                    <tr>
-                        <td><?php echo $emp['id_emprestimo']; ?></td>
-                        <td><?php echo htmlspecialchars($emp['nome_morador']); ?></td>
-                        <td><?php echo htmlspecialchars($emp['nome_item']); ?></td>
-                        <td><?php echo date('d/m/Y H:i', strtotime($emp['data_hora_solicitacao'])); ?></td>
-                        <td><?php echo htmlspecialchars($emp['observacoes'] ?? '-'); ?></td>
-                        <td>
-                            <form method="POST" onsubmit="pararTemporizador(); return confirm('Confirma a entrega do item?');">
-                                <input type="hidden" name="id_emprestimo" value="<?php echo $emp['id_emprestimo']; ?>">
-                                <button type="submit">Confirmar Retirada</button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+            <?php if (!empty($mensagem)): ?>
+                <div class="flash flash-success" role="status"><?php echo htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8'); ?></div>
+            <?php endif; ?>
+
+            <?php if (!empty($erro)): ?>
+                <div class="flash flash-error" role="alert"><?php echo htmlspecialchars($erro, ENT_QUOTES, 'UTF-8'); ?></div>
+            <?php endif; ?>
+
+            <section class="panel admin-panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Pedidos aguardando confirmação</h2>
+                        <p>As solicitações mais antigas aparecem primeiro.</p>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <?php if (empty($emprestimosPendentes)): ?>
+                        <div class="empty-state">
+                            <strong>Tudo em dia</strong>
+                            <span>Nenhuma solicitação de empréstimo pendente para retirada no momento.</span>
+                        </div>
+                    <?php else: ?>
+                        <div class="table-wrap">
+                            <table class="data-table admin-table">
+                                <thead>
+                                    <tr>
+                                        <th># ID</th>
+                                        <th>Morador</th>
+                                        <th>Item solicitado</th>
+                                        <th>Data/hora</th>
+                                        <th>Observações</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($emprestimosPendentes as $emp): ?>
+                                        <tr>
+                                            <td><span class="request-id">#<?php echo $emp['id_emprestimo']; ?></span></td>
+                                            <td><span class="request-person"><?php echo htmlspecialchars($emp['nome_morador']); ?></span></td>
+                                            <td><?php echo htmlspecialchars($emp['nome_item']); ?></td>
+                                            <td><span class="request-date"><?php echo date('d/m/Y H:i', strtotime($emp['data_hora_solicitacao'])); ?></span></td>
+                                            <td><span class="request-note"><?php echo htmlspecialchars($emp['observacoes'] ?? '-'); ?></span></td>
+                                            <td>
+                                                <form class="admin-action-form" method="POST" onsubmit="pararTemporizador(); return confirm('Confirma a entrega do item?');">
+                                                    <input type="hidden" name="id_emprestimo" value="<?php echo $emp['id_emprestimo']; ?>">
+                                                    <button class="btn" type="submit">Confirmar retirada</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script>
         var timerRefresh = setInterval(function() {

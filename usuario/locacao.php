@@ -110,133 +110,198 @@ $consultaMeusEmprestimos = $db->prepare("
 $consultaMeusEmprestimos->execute([$idUsuarioLogado]);
 $meusEmprestimos = $consultaMeusEmprestimos->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo e reservas | Condomínio Compartilha</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <a class="app-brand" href="locacao.php" aria-label="Condomínio Compartilha">
+                <span class="brand-mark" aria-hidden="true">C+</span>
+                <span class="brand-copy">
+                    <span class="brand-name">Condomínio Compartilha</span>
+                    <span class="brand-tagline">Uso inteligente dos espaços e itens</span>
+                </span>
+            </a>
 
-<p>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome'], ENT_QUOTES, 'UTF-8'); ?> | <a href="../auth/logout.php">Sair</a></p>
+            <div class="user-menu">
+                <span class="user-welcome">
+                    <small>Área do morador</small>
+                    <strong><?php echo htmlspecialchars($_SESSION['nome'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                </span>
+                <a class="logout-link" href="../auth/logout.php">Sair</a>
+            </div>
+        </header>
 
-<?php if ($mensagem != ''): ?>
-    <p class="mensagem-temporaria" style="color: green;"><?php echo htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8'); ?></p>
-<?php endif; ?>
-
-<?php if ($erro != ''): ?>
-    <p class="mensagem-temporaria" style="color: red;"><?php echo htmlspecialchars($erro, ENT_QUOTES, 'UTF-8'); ?></p>
-<?php endif; ?>
-
-<div style="display: flex; flex-direction: row; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
-
-    <div style="flex: 1; min-width: 280px;">
-        <h4>Lista de itens</h4>
-
-        <table border="1" cellpadding="6" cellspacing="0" style="width: 100%;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Descrição</th>
-                    <th>Situação</th>
-                    <th>Taxa de uso</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($itens as $item): ?>
-                    <tr
-                        id="linha-<?php echo (int) $item['id_item']; ?>"
-                        data-id="<?php echo (int) $item['id_item']; ?>"
-                        data-descricao="<?php echo htmlspecialchars((string) $item['descricao'], ENT_QUOTES, 'UTF-8'); ?>"
-                        data-taxa="<?php echo htmlspecialchars((string) $item['taxa_uso'], ENT_QUOTES, 'UTF-8'); ?>"
-                        data-situacao="<?php echo htmlspecialchars((string) $item['situacao_item'], ENT_QUOTES, 'UTF-8'); ?>"
-                        <?php if ($item['situacao_item'] == 'disponivel'): ?>
-                            onclick="selecionarItem(this)"
-                            style="cursor: pointer;"
-                            onmouseover="if(itemSelecionado != <?php echo (int) $item['id_item']; ?>) this.style.backgroundColor='#e8f2ff'"
-                            onmouseout="if(itemSelecionado != <?php echo (int) $item['id_item']; ?>) this.style.backgroundColor=''"
-                        <?php endif; ?>
-                    >
-                        <td><?php echo htmlspecialchars((string) $item['id_item']); ?></td>
-                        <td><?php echo htmlspecialchars((string) $item['descricao']); ?></td>
-                        <td><?php echo htmlspecialchars((string) $item['situacao_item']); ?></td>
-                        <td><?php echo htmlspecialchars((string) $item['taxa_uso']); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>  
-      </div>
-
-    <div style="flex: 1; min-width: 280px;">
-        <form method="post" action="locacao.php" onsubmit="salvarEstadoFormulario()">
-            <input type="hidden" id="id_item" name="id_item">
-
-            <div id="areaCalendario">
-                <h4>Calendário para aluguel</h4>
-                <p id="instrucaoItem" style="font-size: 12px; color: #c0392b; font-weight: bold;">Selecione um item disponível na tabela ao lado para agendar.</p>
-
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <button type="button" onclick="mudarMes(-1)">&lt;</button>
-                    <strong id="mesAno"></strong>
-                    <button type="button" onclick="mudarMes(1)">&gt;</button>
-                </div>
-
-                <div id="calendario" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 10px;"></div>
-
-                <p style="font-size: 12px; margin-top: 8px;">Cinza: indisponível | Azul: selecionado</p>
-                <p id="periodoTexto">Nenhum item selecionado.</p>
-
-                <input type="hidden" id="data_inicio" name="data_inicio">
-                <input type="hidden" id="data_fim" name="data_fim">
-
-                <div style="margin-top: 10px; display: flex; gap: 5px;">
-                    <button type="submit" name="solicitar" value="1" id="botaoSolicitar" disabled>Solicitar aluguel</button>
-                    <button type="button" onclick="limparFormulario()">Limpar</button>
+        <main class="page-main">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">Catálogo compartilhado</p>
+                    <h1>Encontre, reserve e acompanhe</h1>
+                    <p>Escolha um item disponível, consulte o calendário e envie sua solicitação de aluguel.</p>
                 </div>
             </div>
-        </form>
-    </div>
 
-    <div style="flex: 1; min-width: 240px;">
-        <h4>Meus Itens Locados</h4>
+            <?php if ($mensagem != ''): ?>
+                <div class="flash flash-success mensagem-temporaria" role="status"><?php echo htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8'); ?></div>
+            <?php endif; ?>
 
-        <?php if (empty($meusEmprestimos)): ?>
-            <p style="font-size: 13px; color: #666;">Você ainda não realizou nenhuma solicitação de aluguel.</p>
-        <?php else: ?>
-            <div style="display: grid; grid-template-columns: 1fr; gap: 10px; max-height: 450px; overflow-y: auto; padding-right: 5px;">
-                <?php foreach ($meusEmprestimos as $emp): ?>
-                    <div style="background: #fdfdfd; border: 1px solid #ccc; border-radius: 6px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                            <strong style="font-size: 14px; color: #333;"><?php echo htmlspecialchars($emp['descricao']); ?></strong>
-                            <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: bold;
-                                <?php
-                                if ($emp['status'] == 'confirmado') echo 'background: #d4edda; color: #155724;';
-                                elseif ($emp['status'] == 'pendente') echo 'background: #fff3cd; color: #856404;';
-                                else echo 'background: #f8d7da; color: #721c24;';
-                                ?>">
-                                <?php echo ucfirst(htmlspecialchars($emp['status'])); ?>
-                            </span>
+            <?php if ($erro != ''): ?>
+                <div class="flash flash-error mensagem-temporaria" role="alert"><?php echo htmlspecialchars($erro, ENT_QUOTES, 'UTF-8'); ?></div>
+            <?php endif; ?>
+
+            <div class="workspace-grid">
+                <section class="panel catalog-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Itens disponíveis</h2>
+                            <p>Selecione um item para consultar as datas.</p>
                         </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Descrição</th>
+                                        <th>Situação</th>
+                                        <th>Taxa de uso</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($itens as $item): ?>
+                                        <tr
+                                            id="linha-<?php echo (int) $item['id_item']; ?>"
+                                            data-id="<?php echo (int) $item['id_item']; ?>"
+                                            data-descricao="<?php echo htmlspecialchars((string) $item['descricao'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            data-taxa="<?php echo htmlspecialchars((string) $item['taxa_uso'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            data-situacao="<?php echo htmlspecialchars((string) $item['situacao_item'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            class="<?php echo $item['situacao_item'] == 'disponivel' ? 'item-row--selectable' : ''; ?>"
+                                            <?php if ($item['situacao_item'] == 'disponivel'): ?>
+                                                onclick="selecionarItem(this)"
+                                            <?php endif; ?>
+                                        >
+                                            <td><span class="item-id">#<?php echo htmlspecialchars((string) $item['id_item']); ?></span></td>
+                                            <td><span class="item-description"><?php echo htmlspecialchars((string) $item['descricao']); ?></span></td>
+                                            <td>
+                                                <span class="availability <?php echo $item['situacao_item'] == 'disponivel' ? 'availability--available' : 'availability--unavailable'; ?>">
+                                                    <?php echo htmlspecialchars((string) $item['situacao_item']); ?>
+                                                </span>
+                                            </td>
+                                            <td><span class="money"><?php echo htmlspecialchars((string) $item['taxa_uso']); ?></span></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
 
-                        <p style="font-size: 12px; margin: 3px 0; color: #555;">
-                            <strong>Retirada:</strong> <?php echo date('d/m/Y', strtotime($emp['data_hora_retirada'])); ?>
-                        </p>
+                <section class="panel booking-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Nova reserva</h2>
+                            <p>Defina um período livre no calendário.</p>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <form class="booking-form" method="post" action="locacao.php" onsubmit="salvarEstadoFormulario()">
+                            <input type="hidden" id="id_item" name="id_item">
 
-                        <p style="font-size: 12px; margin: 3px 0; color: #555;">
-                            <strong>Devolução:</strong> <?php echo date('d/m/Y', strtotime($emp['data_hora_devolucao'])); ?>
-                        </p>
+                            <div id="areaCalendario" class="calendar-area">
+                                <p id="instrucaoItem" class="booking-instruction">Selecione um item disponível na lista para começar.</p>
 
-                        <p style="font-size: 11px; margin: 4px 0 6px 0; color: #888;">
-                            Solicitado em: <?php echo date('d/m/Y H:i', strtotime($emp['data_hora_solicitacao'])); ?>
-                        </p>
+                                <div class="calendar-toolbar">
+                                    <button class="calendar-nav" type="button" onclick="mudarMes(-1)" aria-label="Mês anterior">&lt;</button>
+                                    <strong id="mesAno"></strong>
+                                    <button class="calendar-nav" type="button" onclick="mudarMes(1)" aria-label="Próximo mês">&gt;</button>
+                                </div>
 
-                        <!-- O botão de excluir reserva aparece APENAS se o status for estritamente 'pendente' -->
-                        <?php if ($emp['status'] == 'pendente'): ?>
-                            <form method="post" action="locacao.php" onsubmit="return confirm('Tem certeza que deseja excluir esta reserva?');" style="margin-top: 8px;">
-                                <input type="hidden" name="id_emprestimo" value="<?php echo (int) $emp['id_emprestimo']; ?>">
-                                <button type="submit" name="excluir_emprestimo" value="1" style="background-color: #dc3545; color: white; border: none; padding: 4px 8px; font-size: 11px; border-radius: 4px; cursor: pointer;">Excluir Reserva</button>
-                            </form>
+                                <div id="calendario"></div>
+
+                                <p class="calendar-legend">
+                                    <span class="legend-unavailable">Indisponível</span>
+                                    <span class="legend-selected">Período selecionado</span>
+                                </p>
+                                <p class="period-message" id="periodoTexto">Nenhum item selecionado.</p>
+
+                                <input type="hidden" id="data_inicio" name="data_inicio">
+                                <input type="hidden" id="data_fim" name="data_fim">
+
+                                <div class="action-row">
+                                    <button class="btn btn-primary" type="submit" name="solicitar" value="1" id="botaoSolicitar" disabled>Solicitar aluguel</button>
+                                    <button class="btn btn-secondary" type="button" onclick="limparFormulario()">Limpar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="panel history-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Minhas reservas</h2>
+                            <p>Acompanhe suas solicitações recentes.</p>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <?php if (empty($meusEmprestimos)): ?>
+                            <div class="empty-state">
+                                <strong>Nenhuma reserva ainda</strong>
+                                <span>Suas solicitações aparecerão aqui.</span>
+                            </div>
+                        <?php else: ?>
+                            <div class="history-list">
+                                <?php foreach ($meusEmprestimos as $emp): ?>
+                                    <article class="reservation-card">
+                                        <div class="reservation-head">
+                                            <strong class="reservation-name"><?php echo htmlspecialchars($emp['descricao']); ?></strong>
+                                            <span class="status <?php
+                                                if ($emp['status'] == 'confirmado') echo 'status--confirmed';
+                                                elseif ($emp['status'] == 'pendente') echo 'status--pending';
+                                                else echo 'status--other';
+                                            ?>">
+                                                <?php echo ucfirst(htmlspecialchars($emp['status'])); ?>
+                                            </span>
+                                        </div>
+
+                                        <dl class="reservation-dates">
+                                            <div>
+                                                <dt>Retirada</dt>
+                                                <dd><?php echo date('d/m/Y', strtotime($emp['data_hora_retirada'])); ?></dd>
+                                            </div>
+                                            <div>
+                                                <dt>Devolução</dt>
+                                                <dd><?php echo date('d/m/Y', strtotime($emp['data_hora_devolucao'])); ?></dd>
+                                            </div>
+                                        </dl>
+
+                                        <p class="reservation-requested">
+                                            Solicitado em <?php echo date('d/m/Y H:i', strtotime($emp['data_hora_solicitacao'])); ?>
+                                        </p>
+
+                                        <!-- O botão de excluir reserva aparece APENAS se o status for estritamente 'pendente' -->
+                                        <?php if ($emp['status'] == 'pendente'): ?>
+                                            <form class="reservation-actions" method="post" action="locacao.php" onsubmit="return confirm('Tem certeza que deseja excluir esta reserva?');">
+                                                <input type="hidden" name="id_emprestimo" value="<?php echo (int) $emp['id_emprestimo']; ?>">
+                                                <button class="btn btn-danger" type="submit" name="excluir_emprestimo" value="1">Excluir reserva</button>
+                                            </form>
+                                        <?php endif; ?>
+                                    </article>
+                                <?php endforeach; ?>
+                            </div>
                         <?php endif; ?>
                     </div>
-                <?php endforeach; ?>
+                </section>
             </div>
-        <?php endif; ?>
+        </main>
     </div>
-
-</div>
 
 <script>
 var reservas = <?php echo json_encode($reservas); ?>;
@@ -296,9 +361,8 @@ function desenharCalendario() {
 
     for (var s = 0; s < 7; s++) {
         var nomeDia = document.createElement('span');
+        nomeDia.className = 'calendar-weekday';
         nomeDia.textContent = semana[s];
-        nomeDia.style.textAlign = 'center';
-        nomeDia.style.fontSize = '12px';
         calendario.appendChild(nomeDia);
     }
 
@@ -313,10 +377,10 @@ function desenharCalendario() {
         var data = escreverData(ano, mes + 1, dia);
         var botao = document.createElement('button');
 
+        botao.className = 'calendar-day';
         botao.type = 'button';
         botao.textContent = dia;
         botao.value = data;
-        botao.style.height = '32px';
 
         if (
             itemSelecionado == 0 ||
@@ -325,12 +389,12 @@ function desenharCalendario() {
             situacaoSelecionada != 'disponivel'
         ) {
             botao.disabled = true;
-            botao.style.backgroundColor = '#dddddd';
+            botao.classList.add('is-disabled');
         } else if (
             inicio != '' &&
             ((fim == '' && data == inicio) || (fim != '' && data >= inicio && data <= fim))
         ) {
-            botao.style.backgroundColor = '#a8d4ff';
+            botao.classList.add('is-selected');
         }
 
         botao.onclick = function() {
@@ -396,12 +460,12 @@ function selecionarItem(linha) {
     var linhas = document.querySelectorAll('tr[data-id]');
 
     for (var i = 0; i < linhas.length; i++) {
-        linhas[i].style.backgroundColor = '';
+        linhas[i].classList.remove('is-selected');
     }
 
     itemSelecionado = idClicado;
     situacaoSelecionada = linha.dataset.situacao;
-    linha.style.backgroundColor = '#cfe2ff';
+    linha.classList.add('is-selected');
 
     document.getElementById('id_item').value = itemSelecionado;
     document.getElementById('instrucaoItem').style.display = 'none';
@@ -419,7 +483,7 @@ function limparFormulario() {
     var linhas = document.querySelectorAll('tr[data-id]');
 
     for (var i = 0; i < linhas.length; i++) {
-        linhas[i].style.backgroundColor = '';
+        linhas[i].classList.remove('is-selected');
     }
 
     document.getElementById('id_item').value = '';
