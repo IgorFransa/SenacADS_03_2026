@@ -36,7 +36,7 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 
 ### 1.1. Revisitar jornada (evolução da PoC)
 
-**Evolução planejada (ainda não implementada por completo):** o administrador também poderá cancelar reservas com justificativas pré-definidas (ferramenta perdida, danificada, em manutenção), bloquear o item e notificar moradores e síndico:
+**Evolução planejada (ainda não implementada):** o administrador também poderá cancelar reservas com justificativas pré-definidas (ferramenta perdida, danificada, em manutenção), bloquear o item e notificar moradores e síndico:
 
 1. Administrador acessa o sistema
 2. Realiza o login
