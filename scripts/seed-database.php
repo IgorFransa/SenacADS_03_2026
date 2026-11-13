@@ -1,7 +1,7 @@
 <?php
 /**
  * Dados de demonstração para ambiente Docker (executado na subida do Apache).
- * Senha de todos os usuários de teste: Senha123
+ * Senha de todos os usuários de teste: Senha123 
  */
 require_once __DIR__ . '/../config/conexao.php';
 
