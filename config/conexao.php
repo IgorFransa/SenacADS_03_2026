@@ -1,10 +1,15 @@
 <?php
 function conectarBanco() {
+    $host = getenv('DB_HOST') ?: '127.0.0.1';
+    $dbname = getenv('DB_NAME') ?: 'empcondominio2';
+    $user = getenv('DB_USER') ?: 'admin';
+    $pass = getenv('DB_PASS') ?: 'Senha123';
+
     try {
         $db = new PDO(
-            'mysql:host=127.0.0.1;dbname=empcondominio2;charset=utf8',
-            'admin',
-            'Senha123'
+            "mysql:host={$host};dbname={$dbname};charset=utf8",
+            $user,
+            $pass
         );
 
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

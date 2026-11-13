@@ -53,19 +53,54 @@ SenacADS_03_2026/
 ├── config/
 │   └── conexao.php        # era pi_conexao.php
 ├── database/
-│   └── empCondominio2.sql # inalterado em relação ao original
+│   ├── empCondominio2.sql
+│   └── docker/            # schema usado pelo MySQL no Docker
+├── docker/                # entrypoint do container web
+├── scripts/               # seed de demonstração (Docker)
+├── Dockerfile
+├── docker-compose.yml
 ├── includes/              # reservado para código compartilhado
 └── assets/                # reservado para CSS e JavaScript
     ├── css/
     └── js/
 ```
 
-## Como executar
+## Executar com Docker (recomendado)
+
+Requisitos: [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Compose).
+
+Na raiz do projeto:
+
+```bash
+docker compose up --build
+```
+
+Abra **http://localhost:8080** (redireciona para o login).
+
+Na primeira subida, o MySQL aplica `database/docker/01-schema.sql` e o container web cria **usuários e itens de demonstração** (senha abaixo).
+
+| E-mail | Perfil | Senha |
+|--------|--------|-------|
+| `admin@condominio.local` | administrador | `Senha123` |
+| `morador@condominio.local` | usuário (morador) | `Senha123` |
+
+Comandos úteis:
+
+```bash
+docker compose down          # parar
+docker compose down -v       # parar e apagar volume do banco (recomeça do zero)
+```
+
+Arquivos: `Dockerfile`, `docker-compose.yml`, `docker/entrypoint.sh`, `scripts/seed-database.php`.
+
+## Executar manualmente (XAMPP / PHP local)
 
 1. Importe `database/empCondominio2.sql` no MySQL.
-2. Configure credenciais em `config/conexao.php`, se necessário.
+2. Ajuste credenciais em `config/conexao.php` se necessário (variáveis de ambiente `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` também são suportadas).
 3. Aponte o servidor web (ex.: XAMPP) para a raiz deste projeto.
 4. Acesse `http://localhost/.../index.php`.
+
+Crie usuários no banco com `senha_hash` gerado por `password_hash()` — o script SQL original não inclui dados de exemplo.
 
 ## Perfis de acesso
 

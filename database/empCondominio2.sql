@@ -66,6 +66,7 @@ CREATE TABLE Emprestimo (
     data_hora_confirmacao  DATETIME NULL,
     data_hora_retirada     DATETIME NULL,
     data_hora_devolucao    DATETIME NULL,
+    id_responsavel         INT UNSIGNED NULL,
     observacoes            TEXT,
     CONSTRAINT pk_emprestimo PRIMARY KEY (id_emprestimo),
     CONSTRAINT fk_emprestimo_morador
