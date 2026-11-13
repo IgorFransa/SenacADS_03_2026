@@ -1,110 +1,198 @@
-# Sistema de Empréstimo de Itens — Condomínio
+# SenacADS_03_2026
 
-Aplicação PHP com MySQL para moradores solicitarem aluguel de itens comuns e administradores confirmarem retiradas.
+## Apresentação
 
-## Autoria
+Este projeto apresenta um aplicativo com a finalidade de gerenciar o compartilhamento de itens entre moradores de condomínios, elaborado para a disciplina **Projeto Integrador: Desenvolvimento de Sistemas Orientado a dispositivos móveis e baseados na Web**, do curso de **Análise e Desenvolvimento de Sistemas** da Faculdade **SENAC** – modalidade EAD.
 
-O **código da aplicação** (lógica PHP, telas, consultas ao banco e script SQL do domínio) foi desenvolvido por **Juraci** e **Fernando**.
+### Integrantes do grupo 03 / 2026
 
-## O que é de cada um
+- Darcy Augusto Silveira Kutscher
+- Fernando da Silva Alves
+- Igor Rodrigues Fransa Garcia
+- Jeferson dos Santos Silva
+- Juraci Araujo Marques
+- Vitor Oliveira Torino
 
-| Juraci e Fernando | Reorganização do repositório |
-|-------------------|------------------------------|
-| Conexão PDO e credenciais do banco | Pastas `auth/`, `usuario/`, `admin/`, `config/`, `assets/`, `includes/` |
-| Tela e regras de login (`pi_login.php`) | `auth/login.php` — mesma lógica; apenas caminhos de `require` e redirecionamento |
-| Fluxo do morador: itens, calendário, reservas (`pi_locacao.php`) | `usuario/locacao.php` — mesma lógica; links e `action` dos formulários ajustados |
-| Painel admin: confirmar retirada (`pi_retira.php`) | `admin/retira.php` — mesma lógica; caminhos atualizados |
-| Script `database/empCondominio2.sql` | SQL mantido; pasta `database/` já existia |
-| — | `config/conexao.php` (conteúdo equivalente a `pi_conexao.php`) |
-| — | `auth/logout.php` (novo; antes só era citado nas telas) |
-| — | `index.php` na raiz |
-| — | Este `README.md` (autoria, layout antigo vs novo, como executar) |
+## 1. Definição da PoC
 
-Nenhuma regra de negócio nova foi introduzida na reorganização — só estrutura, encerramento de sessão e documentação.
+O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferramenta, incluindo os seus dias reservados e disponíveis. O usuário poderá registrar o pedido para empréstimo de uma ferramenta para uma data disponível, mas o sistema deverá impedir o usuário de registrar uma reserva para um dia já reservado por ele mesmo ou por outra pessoa.
 
-## Como era o projeto antes da reorganização
+**Jornada do usuário no teste:**
 
-Tudo ficava na **raiz do repositório**, com o prefixo `pi_`:
+1. Usuário acessa o sistema
+2. Realiza o login
+3. Visualiza o catálogo
+4. Seleciona um item
+5. Consulta o calendário
+6. Seleciona data inicial e final
+7. Sistema verifica disponibilidade
+8. Se a data já estiver reservada:
+   - a reserva não continua
+   - o usuário seleciona outra data
+9. Sistema mostra período (e taxa de uso, quando aplicável)
+10. Usuário confirma a solicitação
+11. Reserva é registrada
+12. Datas ficam bloqueadas no calendário
 
-| Arquivo original   | Função |
-|--------------------|--------|
-| `pi_conexao.php`   | Conexão PDO com MySQL (`conectarBanco()`) |
-| `pi_login.php`     | Login, sessão e redirecionamento por `nivel_acesso` |
-| `pi_locacao.php`   | Morador: listagem de itens, calendário, solicitação e cancelamento de reservas |
-| `pi_retira.php`    | Administrador: confirmação de retirada de empréstimos pendentes |
-| `database/empCondominio2.sql` | Criação do banco `empCondominio2` e tabelas (`Usuario`, `Item`, `Emprestimo`, etc.) |
+### 1.1. Revisitar jornada (evolução da PoC)
 
-Não havia `README.md`. As páginas citavam `pi_logout.php`, mas esse arquivo **não estava** no repositório.
+Como evolução da PoC, pode ser acrescentado o cancelamento de reservas. O usuário deverá poder cancelar uma reserva que não será mais necessária. Após o cancelamento, a data deverá voltar a aparecer como disponível na agenda da ferramenta:
 
-## Estrutura atual (após reorganização)
+1. Usuário acessa o sistema
+2. Realiza o login
+3. Visualiza **Minhas Reservas**
+4. Seleciona a reserva que deseja cancelar
+5. Confirma o cancelamento da reserva
+6. A reserva permanece visível no histórico com status cancelada (conforme regras implementadas)
+7. A data volta a estar disponível para reserva
 
-Os arquivos de Juraci e Fernando foram **renomeados e movidos**; o conteúdo funcional permanece o mesmo, com caminhos de `require` e redirecionamentos ajustados:
+**Evolução planejada (ainda não implementada por completo):** o administrador também poderá cancelar reservas com justificativas pré-definidas (ferramenta perdida, danificada, em manutenção), bloquear o item e notificar moradores e síndico.
 
-```
-SenacADS_03_2026/
-├── index.php              # Novo: redireciona para o login
-├── auth/
-│   ├── login.php          # era pi_login.php
-│   └── logout.php         # novo (substitui referência a pi_logout.php)
-├── usuario/
-│   └── locacao.php        # era pi_locacao.php
-├── admin/
-│   └── retira.php         # era pi_retira.php
-├── config/
-│   └── conexao.php        # era pi_conexao.php
-├── database/
-│   ├── empCondominio2.sql
-│   └── docker/            # schema usado pelo MySQL no Docker
-├── docker/                # entrypoint do container web
-├── scripts/               # seed de demonstração (Docker)
-├── Dockerfile
-├── docker-compose.yml
-├── includes/              # reservado para código compartilhado
-└── assets/                # reservado para CSS e JavaScript
-    ├── css/
-    └── js/
-```
+## 2. Preparação do ambiente
 
-## Executar com Docker (recomendado)
+### 2.1. Stack
 
-Requisitos: [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Compose).
+A stack escolhida para este projeto é composta por:
 
-Na raiz do projeto:
+| Tecnologia | Uso |
+|------------|-----|
+| **Apache** | Servidor web que disponibiliza a aplicação no navegador |
+| **PHP** | Back-end e páginas dinâmicas |
+| **JavaScript** | Elementos gráficos da interface (ex.: calendário em `usuario/locacao.php`) |
+| **MySQL** | Armazenamento das informações da aplicação |
+| **Docker** | Containers para subir a aplicação e o banco sem instalar cada serviço à parte |
+
+### 2.2. Ambiente / servidor
+
+Para executar a PoC localmente, o ambiente é composto por:
+
+- Servidor web Apache
+- Linguagem PHP
+- Banco de dados MySQL
+- Estrutura SQL em `database/empCondominio2.sql` (e `database/docker/01-schema.sql` no Docker)
+- Arquivos da aplicação neste repositório
+
+O ambiente **recomendado** é executado por **containers**, evitando instalação e configuração separada de cada serviço. Também é possível rodar **manualmente** com XAMPP ou PHP + MySQL na máquina (seção 2.4).
+
+#### 2.2.1. Requisitos para reproduzir o ambiente (Docker)
+
+- **Docker Desktop**
+  - [Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
+  - [macOS](https://docs.docker.com/desktop/setup/install/mac-install/)
+  - [Linux (Desktop)](https://docs.docker.com/desktop/setup/install/linux/)
+  - No Linux também é possível usar apenas o [Docker Engine](https://docs.docker.com/engine/install/)
+- **Navegador** e **terminal**
+- **Arquivos do projeto** clonados ou extraídos em uma pasta à sua escolha
+- **Porta 8080** disponível (mapeada no `docker-compose.yml`)
+- **Internet** na primeira execução (download das imagens PHP e MySQL)
+
+Mantenha a estrutura de pastas como no repositório após o clone.
+
+#### 2.2.2. Inicializando o ambiente (Docker)
+
+Abra o terminal no diretório raiz do projeto (onde está o arquivo `docker-compose.yml`).
+
+Antes de iniciar os containers, execute:
 
 ```bash
-docker compose up --build
+docker info
 ```
 
-Abra **http://localhost:8080** (redireciona para o login).
+Se retornar informações sobre o Docker, o serviço está funcionando. Caso retorne erro, abra o Docker Desktop e aguarde a inicialização.
 
-Na primeira subida, o MySQL aplica `database/docker/01-schema.sql` e o container web cria **usuários e itens de demonstração** (senha abaixo).
+Na **primeira execução**:
+
+```bash
+docker compose up -d --build
+```
+
+A flag `-d` executa em segundo plano; omita-a para acompanhar os logs no terminal (`docker compose up --build`).
+
+A primeira execução pode demorar alguns minutos, pois as imagens do PHP e do MySQL precisam ser baixadas.
+
+Para acessar a aplicação, abra o navegador em:
+
+**http://localhost:8080**
+
+Na primeira subida, o MySQL aplica o schema e o container web cria **usuários e itens de demonstração**:
 
 | E-mail | Perfil | Senha |
 |--------|--------|-------|
 | `admin@condominio.local` | administrador | `Senha123` |
-| `morador@condominio.local` | usuário (morador) | `Senha123` |
+| `morador@condominio.local` | morador (`usuario`) | `Senha123` |
 
-Comandos úteis:
+Realize os testes na aplicação conforme a jornada da PoC (seção 1).
+
+Para parar os containers:
 
 ```bash
-docker compose down          # parar
-docker compose down -v       # parar e apagar volume do banco (recomeça do zero)
+docker compose down
 ```
 
-Arquivos: `Dockerfile`, `docker-compose.yml`, `docker/entrypoint.sh`, `scripts/seed-database.php`.
+Para apagar o volume do MySQL e recomeçar do zero:
 
-## Executar manualmente (XAMPP / PHP local)
+```bash
+docker compose down -v
+```
+
+Arquivos relacionados: `Dockerfile`, `docker-compose.yml`, `docker/entrypoint.sh`, `scripts/seed-database.php`.
+
+### 2.3. Estrutura do repositório
+
+```
+SenacADS_03_2026/
+├── index.php              # Redireciona para o login
+├── auth/
+│   ├── login.php
+│   └── logout.php
+├── usuario/
+│   └── locacao.php        # Catálogo, calendário e reservas
+├── admin/
+│   └── retira.php         # Confirmação de retirada (administrador)
+├── config/
+│   └── conexao.php
+├── database/
+│   ├── empCondominio2.sql
+│   └── docker/
+├── docker/
+├── scripts/
+├── Dockerfile
+├── docker-compose.yml
+├── includes/
+└── assets/
+    ├── css/
+    └── js/
+```
+
+### 2.4. Execução manual (XAMPP / PHP local)
 
 1. Importe `database/empCondominio2.sql` no MySQL.
-2. Ajuste credenciais em `config/conexao.php` se necessário (variáveis de ambiente `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` também são suportadas).
-3. Aponte o servidor web (ex.: XAMPP) para a raiz deste projeto.
+2. Ajuste credenciais em `config/conexao.php` se necessário (também há suporte a `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` por variáveis de ambiente).
+3. Aponte o Apache (ex.: XAMPP) para a **raiz** deste projeto.
 4. Acesse `http://localhost/.../index.php`.
 
-Crie usuários no banco com `senha_hash` gerado por `password_hash()` — o script SQL original não inclui dados de exemplo.
+O script SQL **não inclui dados de exemplo**. Crie usuários na tabela `Usuario` com `senha_hash` gerado por `password_hash()` no PHP. No Docker, o seed é automático (tabela acima).
 
-## Perfis de acesso
+### 2.5. Perfis de acesso
 
-| Perfil           | Após o login        |
-|------------------|---------------------|
-| `administrador`  | `admin/retira.php`  |
-| `usuario`        | `usuario/locacao.php` |
+| `nivel_acesso`   | Após o login           |
+|------------------|------------------------|
+| `administrador`  | `admin/retira.php`     |
+| `usuario`        | `usuario/locacao.php`  |
+
+## 3. Autoria e evolução do repositório
+
+O **código da aplicação** (lógica PHP, telas, consultas ao banco e script SQL do domínio) foi desenvolvido por **Juraci Araujo Marques** e **Fernando da Silva Alves**.
+
+| Juraci e Fernando | Organização do repositório |
+|-------------------|----------------------------|
+| Conexão PDO (`pi_conexao.php`) | Pastas `auth/`, `usuario/`, `admin/`, `config/`, `assets/`, `includes/` |
+| Login (`pi_login.php`) | `auth/login.php` — mesma lógica; caminhos atualizados |
+| Locação (`pi_locacao.php`) | `usuario/locacao.php` — mesma lógica |
+| Retirada admin (`pi_retira.php`) | `admin/retira.php` — mesma lógica |
+| `database/empCondominio2.sql` | Correção da coluna `id_responsavel` em `Emprestimo` |
+| — | `auth/logout.php`, `index.php`, Docker, seed de demo, este README |
+
+Antes da reorganização, os arquivos `pi_*.php` ficavam na **raiz** do projeto; não havia `README.md` e `pi_logout.php` era citado nas telas, mas não existia no repositório.
+
+Nenhuma regra de negócio nova foi introduzida na reorganização — estrutura de pastas, encerramento de sessão, documentação e ambiente Docker.
