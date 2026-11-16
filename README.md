@@ -4,7 +4,7 @@
 
 Este projeto apresenta um aplicativo com a finalidade de gerenciar o compartilhamento de itens entre moradores de condomínios, elaborado para a disciplina **Projeto Integrador: Desenvolvimento de Sistemas Orientado a dispositivos móveis e baseados na Web**, do curso de **Análise e Desenvolvimento de Sistemas** da Faculdade **SENAC** – modalidade EAD.
 
-### Integrantes do grupo 03 / 2026
+## Integrantes do grupo 03 / 2026
 
 - Darcy Augusto Silveira Kutscher
 - Fernando da Silva Alves
@@ -34,7 +34,7 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 11. Reserva é registrada
 12. Datas ficam bloqueadas no calendário
 
-### 1.1. Revisitar jornada (evolução da PoC)
+## 1.1. Revisitar jornada (evolução da PoC)
 
 **Evolução planejada (ainda não implementada):** o administrador também poderá cancelar reservas com justificativas pré-definidas (ferramenta perdida, danificada, em manutenção), bloquear o item e notificar moradores e síndico:
 
