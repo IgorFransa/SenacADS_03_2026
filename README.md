@@ -32,16 +32,14 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 9. O usuário confirma a solicitação.
 10. A reserva é registrada.
 11. As datas ficam bloqueadas no calendário.
+12. Caso o usuário necessite cancelar a reserva:
+   - Clica no botão "Excluir reserva" e confirma a exclusão.
 
 **Jornada do funcionário do condomínio:**
 1. O morador comparece para retirar o item.
 2. O funcionário acessa o sistema e realiza o login.
 3. O funcionário verifica no sistema a existência da reserva e confirma a retirada do item.
 4. O funcionário entrega o item ao morador.
-
-**Jornada do morador cancelando a reserva:**
-1. O usuário acessa o sistema e realiza o login.
-2. Clica no botão "Excluir reserva" e confirma a exclusão.
 
 ## 1.1. Revisitar jornada (evolução da PoC)
 
