@@ -17,7 +17,7 @@ Este projeto apresenta um aplicativo com a finalidade de gerenciar o compartilha
 
 O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferramenta, incluindo os seus dias reservados e disponíveis. O usuário poderá registrar o pedido para empréstimo de uma ferramenta para uma data disponível, mas o sistema deverá impedir o usuário de registrar uma reserva para um dia já reservado por ele mesmo ou por outra pessoa.
 
-**Jornada do usuário no teste:**
+**Jornada do morador no teste:**
 
 1. Usuário acessa o sistema
 2. Realiza o login
@@ -33,6 +33,13 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 10. Usuário confirma a solicitação
 11. Reserva é registrada
 12. Datas ficam bloqueadas no calendário
+
+    **Jornada do funcionário do condomínio:**
+1. Funcionário acessa o sistema
+2. Realiza o login
+3. O morador comparece para retirar o item
+4. O funcionário verifica no sistema e confirma a existência da reserva
+5. Entrega o item ao morador e confirma a entrega no sistema  
 
 ## 1.1. Revisitar jornada (evolução da PoC)
 
