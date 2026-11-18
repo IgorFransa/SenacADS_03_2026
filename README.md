@@ -34,13 +34,6 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 11. As datas ficam bloqueadas no calendário.
 
 **Jornada do funcionário do condomínio:**
-1. Funcionário acessa o sistema.
-2. Realiza o login.
-3. O morador comparece para retirar o item.
-4. O funcionário verifica no sistema e confirma a existência da reserva.
-5. Entrega o item ao morador e confirma a entrega no sistema.
-
-**Jornada do funcionário do condomínio:**
 1. O morador comparece para retirar o item.
 2. O funcionário acessa o sistema e realiza o login.
 4. O funcionário verifica no sistema a existência da reserva e confirma a retirada do item.
