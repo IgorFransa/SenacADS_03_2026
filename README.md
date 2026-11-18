@@ -52,15 +52,15 @@ As telas principais da aplicação podem ser visualizadas abaixo:
 
 ### Login
 
-![Tela de login](assets/screenshots/login.png)
+![Tela de login](frontend/assets/screenshots/login.png)
 
 ### Área do morador
 
-![Catálogo e calendário de reservas](assets/screenshots/morador.png)
+![Catálogo e calendário de reservas](frontend/assets/screenshots/morador.png)
 
 ### Área da administração
 
-![Painel de solicitações de retirada](assets/screenshots/administracao.png)
+![Painel de solicitações de retirada](frontend/assets/screenshots/administracao.png)
 
 ## 2. Preparação do ambiente
 
@@ -71,8 +71,8 @@ A stack escolhida para este projeto é composta por:
 | Tecnologia | Uso |
 |------------|-----|
 | **Apache** | Servidor web que disponibiliza a aplicação no navegador |
-| **PHP** | Back-end e páginas dinâmicas |
-| **JavaScript** | Elementos gráficos da interface (ex.: calendário em `usuario/locacao.php`) |
+| **PHP** | Back-end, autenticação, consultas e API |
+| **HTML/CSS/JavaScript** | Interface do usuário em `frontend/` |
 | **MySQL** | Armazenamento das informações da aplicação |
 | **Docker** | Containers para subir a aplicação e o banco sem instalar cada serviço à parte |
 
@@ -83,8 +83,8 @@ Para executar a PoC localmente, o ambiente é composto por:
 - Servidor web Apache
 - Linguagem PHP
 - Banco de dados MySQL
-- Estrutura SQL em `database/empCondominio2.sql` (e `database/docker/01-schema.sql` no Docker)
-- Arquivos da aplicação neste repositório
+- Estrutura SQL em `backend/database/empCondominio2.sql` (e `backend/database/docker/01-schema.sql` no Docker)
+- Interface em `frontend/` e API PHP em `backend/public/`
 
 O ambiente **recomendado** é executado por **containers**, evitando instalação e configuração separada de cada serviço. Também é possível rodar **manualmente** com XAMPP ou PHP + MySQL na máquina (seção 2.4).
 
@@ -149,45 +149,43 @@ Para apagar o volume do MySQL e recomeçar do zero:
 docker compose down -v
 ```
 
-Arquivos relacionados: `Dockerfile`, `docker-compose.yml`, `docker/entrypoint.sh`, `scripts/seed-database.php`.
+Arquivos relacionados: `Dockerfile`, `docker-compose.yml`, `docker/entrypoint.sh`, `docker/frontend-backend.conf`, `backend/scripts/seed-database.php`.
 
 ### 2.3. Estrutura do repositório
 
 ```
 SenacADS_03_2026/
-├── index.php              # Redireciona para o login
-├── auth/
-│   ├── login.php
-│   └── logout.php
-├── usuario/
-│   └── locacao.php        # Catálogo, calendário e reservas
-├── admin/
-│   └── retira.php         # Confirmação de retirada (administrador)
-├── config/
-│   └── conexao.php
-├── database/
-│   ├── empCondominio2.sql
-│   └── docker/
+├── frontend/
+│   ├── index.html          # Redireciona para o login
+│   ├── auth/login.html
+│   ├── usuario/locacao.html
+│   ├── admin/retira.html
+│   └── assets/
+│       ├── css/
+│       ├── js/
+│       └── screenshots/
+├── backend/
+│   ├── config/conexao.php
+│   ├── database/
+│   │   ├── empCondominio2.sql
+│   │   └── docker/
+│   ├── public/
+│   │   ├── auth/
+│   │   ├── usuario/
+│   │   ├── admin/
+│   │   └── bootstrap.php
+│   └── scripts/
 ├── docker/
-├── scripts/
 ├── Dockerfile
-├── docker-compose.yml
-├── includes/
-└── assets/
-    ├── css/
-    ├── js/
-    └── screenshots/
-        ├── login.png
-        ├── morador.png
-        └── administracao.png
+└── docker-compose.yml
 ```
 
 ### 2.4. Execução manual (XAMPP / PHP local)
 
-1. Importe `database/empCondominio2.sql` no MySQL.
-2. Ajuste credenciais em `config/conexao.php` se necessário (também há suporte a `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` por variáveis de ambiente).
-3. Aponte o Apache (ex.: XAMPP) para a **raiz** deste projeto.
-4. Acesse `http://localhost/.../index.php`.
+1. Importe `backend/database/empCondominio2.sql` no MySQL.
+2. Ajuste credenciais em `backend/config/conexao.php` se necessário (também há suporte a `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` por variáveis de ambiente).
+3. Aponte o Apache (ex.: XAMPP) para a pasta `frontend` deste projeto e configure o alias `/api/` para `backend/public/` usando `docker/frontend-backend.conf` como referência.
+4. Acesse `http://localhost/.../index.html`.
 
 O script SQL **não inclui dados de exemplo**. Crie usuários na tabela `Usuario` com `senha_hash` gerado por `password_hash()` no PHP. No Docker, o seed é automático (tabela acima).
 
@@ -195,8 +193,8 @@ O script SQL **não inclui dados de exemplo**. Crie usuários na tabela `Usuario
 
 | `nivel_acesso`   | Após o login           |
 |------------------|------------------------|
-| `administrador`  | `admin/retira.php`     |
-| `usuario`        | `usuario/locacao.php`  |
+| `administrador`  | `frontend/admin/retira.html`     |
+| `usuario`        | `frontend/usuario/locacao.html`  |
 
 ## 3. Autoria e evolução do repositório
 
@@ -204,12 +202,12 @@ O **código da aplicação** (lógica PHP, telas, consultas ao banco e script SQ
 
 | Juraci e Fernando | Organização do repositório |
 |-------------------|----------------------------|
-| Conexão PDO (`pi_conexao.php`) | Pastas `auth/`, `usuario/`, `admin/`, `config/`, `assets/`, `includes/` |
-| Login (`pi_login.php`) | `auth/login.php` — mesma lógica; caminhos atualizados |
-| Locação (`pi_locacao.php`) | `usuario/locacao.php` — mesma lógica |
-| Retirada admin (`pi_retira.php`) | `admin/retira.php` — mesma lógica |
-| `database/empCondominio2.sql` | Correção da coluna `id_responsavel` em `Emprestimo` |
-| — | `auth/logout.php`, `index.php`, Docker, seed de demo, este README |
+| Conexão PDO (`pi_conexao.php`) | `backend/config/conexao.php` |
+| Login (`pi_login.php`) | `backend/public/auth/login.php` — mesma lógica; resposta consumida por `frontend/auth/login.html` |
+| Locação (`pi_locacao.php`) | `backend/public/usuario/locacao.php` — mesma lógica; interface em `frontend/usuario/locacao.html` |
+| Retirada admin (`pi_retira.php`) | `backend/public/admin/retira.php` — mesma lógica; interface em `frontend/admin/retira.html` |
+| `backend/database/empCondominio2.sql` | Correção da coluna `id_responsavel` em `Emprestimo` |
+| — | `backend/public/auth/logout.php`, `frontend/index.html`, Docker, seed de demo, este README |
 
 Antes da reorganização, os arquivos `pi_*.php` ficavam na **raiz** do projeto; não havia `README.md` e `pi_logout.php` era citado nas telas, mas não existia no repositório.
 
