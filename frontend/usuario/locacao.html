@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo e reservas | Condomínio Compartilha</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <a class="app-brand" href="/usuario/locacao.html" aria-label="Condomínio Compartilha">
+                <span class="brand-mark" aria-hidden="true">C+</span>
+                <span class="brand-copy">
+                    <span class="brand-name">Condomínio Compartilha</span>
+                    <span class="brand-tagline">Uso inteligente dos espaços e itens</span>
+                </span>
+            </a>
+
+            <div class="user-menu">
+                <span class="user-welcome">
+                    <small>Área do morador</small>
+                    <strong id="nomeUsuario"></strong>
+                </span>
+                <a class="logout-link" href="/api/auth/logout.php">Sair</a>
+            </div>
+        </header>
+
+        <main class="page-main">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">Catálogo compartilhado</p>
+                    <h1>Encontre, reserve e acompanhe</h1>
+                    <p>Escolha um item disponível, consulte o calendário e envie sua solicitação de aluguel.</p>
+                </div>
+            </div>
+
+            <div id="mensagemSucesso" class="flash flash-success mensagem-temporaria" role="status" hidden></div>
+            <div id="mensagemErro" class="flash flash-error mensagem-temporaria" role="alert" hidden></div>
+
+            <div class="workspace-grid">
+                <section class="panel catalog-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Itens disponíveis</h2>
+                            <p>Selecione um item para consultar as datas.</p>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Descrição</th>
+                                        <th>Situação</th>
+                                        <th>Taxa de uso</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itensTabela"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel booking-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Nova reserva</h2>
+                            <p>Defina um período livre no calendário.</p>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <form class="booking-form" id="bookingForm" method="post" action="/api/usuario/locacao.php">
+                            <input type="hidden" id="id_item" name="id_item">
+
+                            <div id="areaCalendario" class="calendar-area">
+                                <p id="instrucaoItem" class="booking-instruction">Selecione um item disponível na lista para começar.</p>
+
+                                <div class="calendar-toolbar">
+                                    <button class="calendar-nav" id="mesAnterior" type="button" aria-label="Mês anterior">&lt;</button>
+                                    <strong id="mesAno"></strong>
+                                    <button class="calendar-nav" id="proximoMes" type="button" aria-label="Próximo mês">&gt;</button>
+                                </div>
+
+                                <div id="calendario"></div>
+
+                                <p class="calendar-legend">
+                                    <span class="legend-unavailable">Indisponível</span>
+                                    <span class="legend-selected">Período selecionado</span>
+                                </p>
+                                <p class="period-message" id="periodoTexto">Nenhum item selecionado.</p>
+
+                                <input type="hidden" id="data_inicio" name="data_inicio">
+                                <input type="hidden" id="data_fim" name="data_fim">
+
+                                <div class="action-row">
+                                    <button class="btn btn-primary" type="submit" name="solicitar" value="1" id="botaoSolicitar" disabled>Solicitar aluguel</button>
+                                    <button class="btn btn-secondary" id="limparFormulario" type="button">Limpar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="panel history-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Minhas reservas</h2>
+                            <p>Acompanhe suas solicitações recentes.</p>
+                        </div>
+                    </div>
+                    <div class="panel-body" id="historicoReservas"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="/assets/js/locacao.js" defer></script>
+</body>
+</html>

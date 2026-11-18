@@ -9,7 +9,7 @@ services:
       MYSQL_PASSWORD: Senha123
     volumes:
       - db_data:/var/lib/mysql
-      - ./database/docker/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./backend/database/docker/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uadmin", "-pSenha123"]
       interval: 5s

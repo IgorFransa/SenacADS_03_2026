@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitações de retirada | Condomínio Compartilha</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <a class="app-brand" href="/admin/retira.html" aria-label="Condomínio Compartilha">
+                <span class="brand-mark" aria-hidden="true">C+</span>
+                <span class="brand-copy">
+                    <span class="brand-name">Condomínio Compartilha</span>
+                    <span class="brand-tagline">Uso inteligente dos espaços e itens</span>
+                </span>
+            </a>
+
+            <div class="user-menu">
+                <span class="user-welcome">
+                    <small>Área da administração</small>
+                    <strong id="nomeUsuario"></strong>
+                </span>
+                <a class="logout-link" href="/api/auth/logout.php">Sair</a>
+            </div>
+        </header>
+
+        <main class="page-main">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">Central de atendimento</p>
+                    <h1>Solicitações de retirada</h1>
+                    <p>Revise os pedidos pendentes e confirme a entrega dos itens aos moradores.</p>
+                </div>
+                <span class="auto-refresh">Atualização automática a cada 30s</span>
+            </div>
+
+            <div id="mensagemSucesso" class="flash flash-success" role="status" hidden></div>
+            <div id="mensagemErro" class="flash flash-error" role="alert" hidden></div>
+
+            <section class="panel admin-panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Pedidos aguardando confirmação</h2>
+                        <p>As solicitações mais antigas aparecem primeiro.</p>
+                    </div>
+                </div>
+
+                <div class="panel-body" id="solicitacoesConteudo"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/assets/js/admin.js" defer></script>
+</body>
+</html>
