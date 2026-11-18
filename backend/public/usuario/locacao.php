@@ -72,9 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['solicitar'])) {
             $consultaDatas->execute([$idSelecionado, $dataFim, $dataInicio]);
             $quantidade = $consultaDatas->fetchColumn();
 
-            if ($quantidade > 0) {
-                $erro = 'Já existe um pedido para esse item nesse período.';
-            } else {
+            if ($quantidade == 0) {
                 $gravar = $db->prepare("INSERT INTO Emprestimo (id_morador, id_item, data_hora_solicitacao, status, data_hora_retirada, data_hora_devolucao) VALUES (?, ?, NOW(), 'pendente', ?, ?)");
                 $gravar->execute([
                     $idUsuarioLogado,
@@ -83,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['solicitar'])) {
                     $dataFim . ' 20:00:00'
                 ]);
 
-                $mensagem = 'Solicitação enviada!Aguarde a aprovação do responsável.';
+                $mensagem = 'Solicitação enviada! Dirija-se a administração na data agendada para retirada do item.';
                 $dataInicio = '';
                 $dataFim = '';
             }

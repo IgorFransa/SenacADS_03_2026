@@ -37,6 +37,19 @@ function escaparHtml(valor) {
         .replace(/'/g, '&#039;');
 }
 
+function formatarDataBR(dataISO) {
+    if (!dataISO) {
+        return '';
+    }
+
+    var partes = dataISO.split('-');
+    if (partes.length !== 3) {
+        return dataISO;
+    }
+
+    return partes[2] + '/' + partes[1] + '/' + partes[0];
+}
+
 function carregarDados(restaurarEstadoSalvo) {
     fetch('/api/usuario/locacao.php', {
         credentials: 'same-origin'
@@ -193,9 +206,9 @@ function mostrarPeriodo() {
     } else if (inicio === '') {
         document.getElementById('periodoTexto').textContent = 'Escolha o primeiro dia e depois o último.';
     } else if (fim === '') {
-        document.getElementById('periodoTexto').textContent = 'Início: ' + inicio + ' | Agora escolha o último dia.';
+        document.getElementById('periodoTexto').textContent = 'Início: ' + formatarDataBR(inicio) + ' | Agora escolha o último dia.';
     } else {
-        document.getElementById('periodoTexto').textContent = 'Período: ' + inicio + ' até ' + fim;
+        document.getElementById('periodoTexto').textContent = 'Período: ' + formatarDataBR(inicio) + ' até ' + formatarDataBR(fim);
     }
 
     document.getElementById('data_inicio').value = inicio;
