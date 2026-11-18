@@ -34,7 +34,7 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 11. Reserva é registrada
 12. Datas ficam bloqueadas no calendário
 
-    **Jornada do funcionário do condomínio:**
+**Jornada do funcionário do condomínio:**
 1. Funcionário acessa o sistema
 2. Realiza o login
 3. O morador comparece para retirar o item
