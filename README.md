@@ -43,7 +43,7 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 **Jornada do funcionário do condomínio:**
 1. O morador comparece para retirar o item.
 2. O funcionário acessa o sistema e realiza o login.
-4. O funcionário verifica no sistema a existência da reserva e confirma a retirada no sistema.
+4. O funcionário verifica no sistema a existência da reserva e confirma a retirada no item.
 6. O funcionário entrega o item ao morador.
 
 ## 1.1. Revisitar jornada (evolução da PoC)
