@@ -19,27 +19,32 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 
 **Jornada do morador no teste:**
 
-1. Usuário acessa o sistema
-2. Realiza o login
-3. Visualiza o catálogo
-4. Seleciona um item
-5. Consulta o calendário
-6. Seleciona data inicial e final
-7. Sistema verifica disponibilidade
-8. Se a data já estiver reservada:
-   - a reserva não continua
-   - o usuário seleciona outra data
-9. Sistema mostra período (e taxa de uso, quando aplicável)
-10. Usuário confirma a solicitação
-11. Reserva é registrada
-12. Datas ficam bloqueadas no calendário
+1. O usuário acessa o sistema e realiza o login.
+2. Visualiza o catálogo.
+3. Seleciona um item.
+4. Consulta o calendário.
+5. Seleciona data inicial e final.
+6. O sistema verifica disponibilidade.
+7. Se a data já estiver reservada:
+   - a reserva não continua.
+   - o usuário seleciona outra data.
+8. O sistema mostra período (e taxa de uso, quando aplicável).
+9. O usuário confirma a solicitação.
+10. A reserva é registrada.
+11. As datas ficam bloqueadas no calendário.
 
 **Jornada do funcionário do condomínio:**
-1. Funcionário acessa o sistema
-2. Realiza o login
-3. O morador comparece para retirar o item
-4. O funcionário verifica no sistema e confirma a existência da reserva
-5. Entrega o item ao morador e confirma a entrega no sistema  
+1. Funcionário acessa o sistema.
+2. Realiza o login.
+3. O morador comparece para retirar o item.
+4. O funcionário verifica no sistema e confirma a existência da reserva.
+5. Entrega o item ao morador e confirma a entrega no sistema.
+
+**Jornada do funcionário do condomínio:**
+1. O morador comparece para retirar o item.
+2. O funcionário acessa o sistema e realiza o login.
+4. O funcionário verifica no sistema a existência da reserva e confirma a retirada no sistema.
+6. O funcionário entrega o item ao morador.
 
 ## 1.1. Revisitar jornada (evolução da PoC)
 
