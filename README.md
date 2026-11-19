@@ -45,13 +45,12 @@ O usuário deve ser capaz de consultar a agenda de disponibilidade de uma ferram
 
 **Evolução planejada (ainda não implementada):** o administrador também poderá cancelar reservas com justificativas pré-definidas (ferramenta perdida, danificada, em manutenção), bloquear o item e notificar moradores e síndico:
 
-1. Administrador acessa o sistema
-2. Realiza o login
-3. Visualiza **Solicitações de retirada**
-4. Seleciona a reserva que deseja cancelar
-5. Insere a justificativa apropriada
-6. Confirma o cancelamento da reserva
-7. A reserva permanece visível no histórico com status cancelada (conforme regras implementadas)
+1. O Administrador acessa o sistema e realiza o login.
+2. Visualiza **Solicitações de retirada**.
+3. Seleciona a reserva que deseja cancelar.
+4. Insere a justificativa apropriada.
+5. Confirma o cancelamento da reserva.
+6. A reserva permanece visível no histórico com status cancelada (conforme regras implementadas).
 
 ## Capturas de tela
 
@@ -103,7 +102,11 @@ O ambiente **recomendado** é executado por **containers**, evitando instalaçã
   - [Linux (Desktop)](https://docs.docker.com/desktop/setup/install/linux/)
   - No Linux também é possível usar apenas o [Docker Engine](https://docs.docker.com/engine/install/)
 - **Navegador** e **terminal**
-- **Arquivos do projeto** clonados ou extraídos em uma pasta à sua escolha
+- **Arquivos do projeto** clonados ou extraídos em uma pasta à sua escolha.
+   - Para fazer o download do projeto, estando na página principal:
+      - Clique no botão verde "Code", posicionado logo acima da lista de arquivos no canto superior direito.
+      - No menu que abrir, clique na última opção chamada "Download ZIP".
+      - Extraia os arquivos na pasta onde o projeto ficará para teste.
 - **Porta 8080** disponível (mapeada no `docker-compose.yml`)
 - **Internet** na primeira execução (download das imagens PHP e MySQL)
 
@@ -111,7 +114,7 @@ Mantenha a estrutura de pastas como no repositório após o clone.
 
 #### 2.2.2. Inicializando o ambiente (Docker)
 
-Abra o terminal no diretório raiz do projeto (onde está o arquivo `docker-compose.yml`).
+Abra o terminal no diretório raiz do projeto, onde ele foi extraído, conforme orientação acima, e onde está o arquivo `docker-compose.yml`.
 
 Antes de iniciar os containers, execute:
 
